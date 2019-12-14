@@ -27,6 +27,6 @@ mapshaper -i "$folder"/processing/out_111.shp "$folder"/processing/out_112.shp c
 # se allo stesso comune sono associati più poligoni con diverso codice Corine (111 o 112), estrai quello con codice 111
 mapshaper "$folder"/processing/comuni_11X.shp -each "this.PRO_COM_T" -sort "this.code" ascending -uniq "PRO_COM_T" -o "$folder"/processing/out_11X.shp
 
-# estrai per ogni comune, un punto che ricada all'interno del poligono classificato come "Urban fabric"; in CSV e in GEOJSON in EPSG:4326
+# estrai per ogni comune, un punto che ricada all'interno del poligono classificato come "Urban fabric"; in CSV e in shp in EPSG:4326
 mapshaper "$folder"/processing/out_11X.shp -proj wgs84 -each 'x=this.innerX,y=this.innerY' -each 'delete area' -o "$folder"/output/comuni_11X.csv
-mapshaper "$folder"/processing/out_11X.shp -points inner -proj wgs84 -o rfc7946 "$folder"/output/comuni_11X.geojson
+mapshaper "$folder"/processing/out_11X.shp -points inner -proj wgs84 -o "$folder"/output/comuni_11X.geojson
