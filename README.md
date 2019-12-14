@@ -54,6 +54,7 @@ Sono le aree in cui vive la maggior parte delle persone: utilizzare i centroidi 
 - fare esempio di Morterone, ISTAT 097055, che con Corine è tutto verde
 - fare esempio di Trapani che a EST è Erice, e non ha senso;
 - mostrare soluzione http://overpass-turbo.eu/s/OW8
+- `mapshaper data/CLC18_IT.shp -filter-fields CODE_18 -simplify 0.8 visvalingam -o data/corine_2018.topojson`
 
 # Note
 
