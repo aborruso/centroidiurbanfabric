@@ -30,3 +30,7 @@ mapshaper "$folder"/processing/comuni_11X.shp -each "this.PRO_COM_T" -sort "this
 # estrai per ogni comune, un punto che ricada all'interno del poligono classificato come "Urban fabric"; in CSV e in shp in EPSG:4326
 mapshaper "$folder"/processing/out_11X.shp -proj wgs84 -each 'x=this.innerX,y=this.innerY' -each 'delete area' -o "$folder"/output/comuni_11X.csv
 mapshaper "$folder"/processing/out_11X.shp -points inner -proj wgs84 -o "$folder"/output/comuni_11X.geojson
+
+# comuni senza 111 e 112
+mapshaper "$folder"/data/Comuni01012019_g_WGS84.topojson -proj from=EPSG:32632 -join "$folder"/output/comuni_11X.geojson keys=PRO_COM,PRO_COM -filter 'code != 111' -filter 'code != 112 && code != 111' -each 'delete code' -proj wgs84 -o "$folder"/output/comuni_NO_11X.geojson
+mapshaper "$folder"/data/Comuni01012019_g_WGS84.topojson -proj from=EPSG:32632 -join "$folder"/output/comuni_11X.geojson keys=PRO_COM,PRO_COM -filter 'code != 111' -filter 'code != 112 && code != 111' -each 'delete code' -o "$folder"/output/comuni_NO_11X.csv
