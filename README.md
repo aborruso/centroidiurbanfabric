@@ -50,7 +50,7 @@ Sono le aree in cui vive la maggior parte delle persone: utilizzare i centroidi 
 
 # da fare
 
-- aggiungere anche i poligoni con codice 112, perché altrimenti i comuni piccoli non escono fuori
+- ~~aggiungere anche i poligoni con codice 112, perché altrimenti i comuni piccoli non escono fuori~~
 - fare esempio di Morterone, ISTAT 097055, che con Corine è tutto verde
 - fare esempio di Trapani che a EST è Erice, e non ha senso;
 - mostrare soluzione http://overpass-turbo.eu/s/OW8
