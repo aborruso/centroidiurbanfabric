@@ -9,7 +9,8 @@ mkdir -p "$folder"/processing "$folder"/output
 rm "$folder"/processing/*
 rm "$folder"/output/*
 
-# `mapshaper data/CLC18_IT.shp -filter-fields CODE_18 -simplify 0.8 visvalingam -o data/corine_2018.topojson`
+# mapshaper data/CLC18_IT.shp -filter-fields CODE_18 -simplify 0.8 visvalingam -o data/corine_2018.topojson
+# mapshaper data/Localita_11_WGS84/Localita_11_WGS84.shp -filter 'CENTRO_CL == "1"' -simplify 0.8 visvalingam -proj wgs84 -o data/Localita_11_WGS84/Localita_11_WGS84_topo.topojson
 
 # estrai "Continuous urban fabric" e "Discontinuous urban fabric" e fanne il dissolve
 mapshaper "$folder"/data/corine_2018.topojson -filter 'CODE_18 == "111"' -dissolve2 -proj from=EPSG:32632 -o "$folder"/processing/111.shp
@@ -48,3 +49,6 @@ mapshaper "$folder"/data/Comuni01012019_g_WGS84.topojson -proj from=EPSG:32632 \
   -join "$folder"/output/comuni_11X.geojson keys=PRO_COM,PRO_COM \
   -filter 'code == "112" || code == "111"' \
   -each 'delete code' -proj wgs84 -o "$folder"/output/comuni_11X_poly.geojson
+
+# estrai i centroidi "interni" dalle località ISTAT e aggiungi campo con codice ISTAT comunale
+mapshaper "$folder"/data/Localita_11_WGS84/Localita_11_WGS84_topo.topojson -points inner -proj from=EPSG:4326 -each 'PRO_COM_T = String(COD_ISTAT).replace(/^(.*)([0-9]{6})$/, "$2")' -o "$folder"/data/Localita_11_WGS84/Localita_11_WGS84_topo_points.geojson
