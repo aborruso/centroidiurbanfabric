@@ -21,7 +21,7 @@ mapshaper "$folder"/data/Comuni01012019_g_WGS84.topojson -clip "$folder"/process
 mapshaper "$folder"/processing/comuni_111.shp -each "this.PRO_COM_T" -sort "this.area" descending -uniq "PRO_COM_T" -o "$folder"/processing/out_111.shp
 mapshaper "$folder"/processing/comuni_112.shp -each "this.PRO_COM_T" -sort "this.area" descending -uniq "PRO_COM_T" -o "$folder"/processing/out_112.shp
 
-# combina i poligoni 112 e 112 dei vari comuni in unico layer
+# combina i poligoni 111 e 112 dei vari comuni in unico layer
 mapshaper -i "$folder"/processing/out_111.shp "$folder"/processing/out_112.shp combine-files -merge-layers -o "$folder"/processing/comuni_11X.shp
 
 # se allo stesso comune sono associati più poligoni con diverso codice Corine (111 o 112), estrai quello con codice 111
@@ -31,7 +31,7 @@ mapshaper "$folder"/processing/comuni_11X.shp -each "this.PRO_COM_T" -sort "this
 mapshaper "$folder"/processing/out_11X.shp -proj wgs84 -each 'x=this.innerX,y=this.innerY' -each 'delete area' -o "$folder"/output/comuni_11X.csv
 mapshaper "$folder"/processing/out_11X.shp -points inner -proj wgs84 -o "$folder"/output/comuni_11X.geojson
 
-# estrai comuni senza 111 e 112 asskciati
+# estrai comuni senza 111 e 112 associati
 mapshaper "$folder"/data/Comuni01012019_g_WGS84.topojson -proj from=EPSG:32632 \
   -join "$folder"/output/comuni_11X.geojson keys=PRO_COM,PRO_COM \
   -filter 'code != 111' -filter 'code != 112 && code != 111' \
@@ -41,7 +41,7 @@ mapshaper "$folder"/data/Comuni01012019_g_WGS84.topojson -proj from=EPSG:32632 \
   -filter 'code != 112 && code != 111' \
   -each 'delete code' -o "$folder"/output/comuni_NO_11X.csv
 
-# estrai comuni con 111 e 112 asskciati
+# estrai comuni con 111 e 112 associati
 mapshaper "$folder"/data/Comuni01012019_g_WGS84.topojson -proj from=EPSG:32632 \
   -join "$folder"/output/comuni_11X.geojson keys=PRO_COM,PRO_COM \
   -filter 'code == "112" || code == "111"' \
