@@ -9,6 +9,8 @@ mkdir -p "$folder"/processing "$folder"/output
 rm "$folder"/processing/*
 rm "$folder"/output/*
 
+# `mapshaper data/CLC18_IT.shp -filter-fields CODE_18 -simplify 0.8 visvalingam -o data/corine_2018.topojson`
+
 # estrai "Continuous urban fabric" e "Discontinuous urban fabric" e fanne il dissolve
 mapshaper "$folder"/data/corine_2018.topojson -filter 'CODE_18 == "111"' -dissolve2 -proj from=EPSG:32632 -o "$folder"/processing/111.shp
 mapshaper "$folder"/data/corine_2018.topojson -filter 'CODE_18 == "112"' -dissolve2 -proj from=EPSG:32632 -o "$folder"/processing/112.shp

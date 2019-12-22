@@ -1,10 +1,9 @@
 - [Cerco un centro di gravità permanente, per rappresentare il pendolarismo tra i Comuni italiani](#cerco-un-centro-di-gravità-permanente-per-rappresentare-il-pendolarismo-tra-i-comuni-italiani)
   - [Creare un punto di riferimento basato sull'&quot;edificato&quot;](#creare-un-punto-di-riferimento-basato-sullquotedificatoquot)
-  - [Dati](#dati)
-  - [Software usato](#software-usato)
-- [da fare](#da-fare)
-- [Note](#note)
-- [fonte dati](#fonte-dati)
+- [Risultati](#risultati)
+- [Alternative](#alternative)
+- [Dati utilizzati](#dati-utilizzati)
+- [Software usato](#software-usato)
 
 # Cerco un centro di gravità permanente, per rappresentare il pendolarismo tra i Comuni italiani
 
@@ -64,33 +63,57 @@ In maniera semplificata, per un solo comune, è quanto visualizzato sotto:
 
 ![](imgs/centroideInnerCorine.gif)
 
-È una procedura replicabile con molti strumenti GIS. Per questo tipo di processi trovo di gran comodità lo straordinario [**mapshaper**](https://github.com/mbloch/mapshaper), con cui ho creato questo script di esempio
+È una procedura replicabile con molti strumenti GIS. Per questo tipo di processi trovo di gran comodità lo straordinario [**mapshaper**](https://github.com/mbloch/mapshaper), con cui ho creato [questo script](./centroidiComuni.sh) di esempio.<br>
+Rispetto a quanto descritto sopra, nello script si tiene in considerazione anche dei poligoni con codice `112` ("*Discontinuous urban fabric*"), perché ci sono tantissimi comuni italiani in cui non è presente alcun area classificata come "*Continuous urban fabric*".
 
-## Dati
+In output:
 
-## Software usato
+- i [punti](./output/comuni_11X.geojson) che rappresentano le aree "abitate", per quei comuni per i quali è stato possibile generarli in questa modalità (sono 6700);
+- i [poligoni](./output/comuni_11X_poly.geojson) dei comuni associabili a questi punti;
+- i [poligoni](./output/comuni_NO_11X.geojson) dei comuni non associabili a questi punti.
+
+# Risultati
+
+La procedura descritta, i dati utilizzati e lo *script* creato non risolvono pienamente il problema, perché non producuno un *output* per tutti i comuni di Italia. In ogni caso Günter dopo averli ricevuti mi ha scritto:
+
+> Comunque i tuoi punti funzionano molto bene, ho comparato in alcune zone con geonames, è i tuoi vincono, mi sa perché sono oggettivi e satelliteari :)
+
+In questo modo non è possibile associare un punto a ogni comune di Italia, per varie ragioni:
+
+- i dati Corine che ho utilizzato hanno una *Minimum Mapping Unit* (MMU) di 25 ettari. In Italia ci sono comuni minuscoli (con meno di 100 abitanti);
+- ci sono comuni (beati gli abitanti) per i quali non esitono aree classificate (sempre in relazione ai dati qui usati) come "*Urban fabric*".
+
+Inoltre questa procedura, anche quando produce un risultato, può creare dei punti comunque problematici.<br>
+Un caso è ad esempio legato alla stagionalità. Ci sono comuni di Italia, lontani dal mare, che hanno delle propaggini molto grandi sviluppate lungo costa, a cui corrisponde molto "cemento"; in questo caso l'area di "*Urban fabric*" più grande potrebbe non corrispondere all'edificato del comune, ma alla sua "espansione marina". Vale ad esempio per il comune di Agrigento e l'area di San Leone.<br>
+Un altro è legato all'espansione de comuni stessi. Ci sono comuni le cui periferie si stanno estendendo all'interno dei limiti comunali di comuni limitrofi; tale espansione alcune volte ha un'area maggiore di quella abitata del comune "invaso". Vale ad esempio per il comune di Erice, all'interno del quale si sta espandendo quello di Trapani.<br>
+
+# Alternative
+
+Ci sono sicuramente dei dati già "pronti all'uso" per ottenere quanto descritto. A me vengono in mente:
+
+- i [dataset di **geonames**](https://www.geonames.org/export/) da cui è possibile estrarre i comuni italiani;
+- i dati **OpenStreetMap**, e in particolare i nodi taggati come `place=city`, `place=town` e `place=village`. [Qui](http://overpass-turbo.eu/s/OW8) ad esempio una query su overpass turbo, per vedere quelli di una certa area.
+
+Anche questi però probabilmente, dopo un'analisi, non risolvono in modo pieno la cosa.
+
+Si potrebbero utilizzare i dati delle sezioni di censimento ISTAT - da incrociare sempre con dati sull'uso del suolo - che in modo molto dettagliato consentono di mappare dove vivono le persone.<br>
+O si potrebbe lavorare sui dati del dataset "[High Resolution Population Density Maps + Demographic Estimates](https://dataforgood.fb.com/docs/methodology-high-resolution-population-density-maps-demographic-estimates/)", che stima il numero di persone che vivono all'interno di un tassello di una griglia dal passo 30 metri in (quasi) tutti i paesi del mondo.<br>
+O sull'integrazione di tutto questo.
+
+Qui mi sono fermato a una soluzione non "perfetta", perché dopo averci ragionato un po' sopra con Günter, mi sembrava comunque interessante condivere processi e risultati.
+
+---
+
+# Dati utilizzati
+
+Ne ho utilizzati due:
+
+- lo shapefile CLC18, relativo ai dati Corine per l'Italia,  pubblicato qui <http://groupware.sinanet.isprambiente.it/uso-copertura-e-consumo-di-suolo/library/copertura-del-suolo/corine-land-cover/clc2018_shapefile/>;
+- i limiti comunali a cura di ISTAT pubblicati qui <https://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012019_g.zip>.
+
+
+# Software usato
 
 - [**mapshaper**](https://github.com/mbloch/mapshaper), per creare gli output geografico/spaziali descritti;
 - [**QGIS**](https://qgis.org), per produrre alcune delle immagini di questo articolo;
 - [**Visual Studio Code**](https://code.visualstudio.com/), per scrivere questo articolo in `markdown` e gestire il *repository*;
-
-
-
-# da fare
-
-- ~~aggiungere anche i poligoni con codice 112, perché altrimenti i comuni piccoli non escono fuori~~
-- fare esempio di Morterone, ISTAT 097055, che con Corine è tutto verde
-- fare esempio di Trapani che a EST è Erice, e non ha senso;
-- mostrare soluzione http://overpass-turbo.eu/s/OW8
-- `mapshaper data/CLC18_IT.shp -filter-fields CODE_18 -simplify 0.8 visvalingam -o data/corine_2018.topojson`
-
-# Note
-
-- altri modi, come quello di usare le sezioni ISTAT
-
-http://www.istat.it/storage/cartografia/matrici_pendolarismo/matrici_pendolarismo_2011.zip
-
-# fonte dati
-
-- Corine Land Cover <http://groupware.sinanet.isprambiente.it/uso-copertura-e-consumo-di-suolo/library/copertura-del-suolo/corine-land-cover/clc2018_shapefile/>
-- Limiti Comunali da <https://www.istat.it/storage/cartografia/confini_amministrativi/generalizzati/Limiti01012019_g.zip>
