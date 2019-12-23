@@ -52,3 +52,6 @@ mapshaper "$folder"/data/Comuni01012019_g_WGS84.topojson -proj from=EPSG:32632 \
 
 # estrai i centroidi "interni" dalle località ISTAT e aggiungi campo con codice ISTAT comunale
 mapshaper "$folder"/data/Localita_11_WGS84/Localita_11_WGS84_topo.topojson -points inner -proj from=EPSG:4326 -each 'PRO_COM_T = String(COD_ISTAT).replace(/^(.*)([0-9]{6})$/, "$2")' -o "$folder"/output/Localita_11_WGS84_topo_points.geojson
+
+# converti file CSV con coordinate del centroide della sezione che contiene il Municipio in geojson
+mapshaper -i "$folder"/data/ElencoUnitaAmministrative2011.csv string-fields=PRO_COM_T -points x=X_WGS84_32N y=Y_WGS84_32N -proj from=EPSG:32632 wgs84 -o format=geojson "$folder"/output/ElencoUnitaAmministrative2011.geojson
